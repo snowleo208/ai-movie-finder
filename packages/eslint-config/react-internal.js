@@ -11,7 +11,7 @@ const project = resolve(process.cwd(), "tsconfig.json");
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
   extends: ["eslint:recommended", "prettier", "turbo"],
-  plugins: ["only-warn"],
+  plugins: ["only-warn", "jest"],
   globals: {
     React: true,
     JSX: true,
@@ -35,5 +35,9 @@ module.exports = {
   overrides: [
     // Force ESLint to detect .tsx files
     { files: ["*.js?(x)", "*.ts?(x)"] },
+    {
+      files: ["*.spec.(ts|tsx)"],
+      extends: ["plugin:testing-library/react"],
+    },
   ],
 };
