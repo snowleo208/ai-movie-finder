@@ -30,5 +30,9 @@ module.exports = {
     {
       files: ["*.js?(x)", "*.ts?(x)"],
     },
+    {
+      files: ["*.spec.(ts|tsx)"],
+      extends: ["plugin:testing-library/react", "jest"],
+    },
   ],
 };
