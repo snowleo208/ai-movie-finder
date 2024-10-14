@@ -1,37 +1,35 @@
+'use server';
+
 import { HfInference } from "@huggingface/inference";
 
-// type LoadingState = "loaded" | "error" | "loading";
+export async function fetchResponse() {
+  try {
+    const accessToken = process.env.HF_TOKEN;
+    const inference = new HfInference(accessToken);
 
-const HF_TOKEN = "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";
+    const out = await inference.chatCompletion({
+      model: "NousResearch/Hermes-3-Llama-3.1-8B",
+      messages: [
+        {
+          role: "user",
+          content:
+            "Write a haiku using these elements: spring, memories, believe. ",
+        },
+      ],
+      temperature: 0.5,
+      max_tokens: 1024,
+      top_p: 0.7,
+    });
 
-console.log(HF_TOKEN);
-
-export function useAiModal() {
-  async function fetchResponse() {
-    try {
-      const inference = new HfInference(HF_TOKEN);
-
-      const out = await inference.chatCompletion({
-        model: "NousResearch/Hermes-3-Llama-3.1-8B",
-        messages: [
-          {
-            role: "user",
-            content:
-              "Write a haiku using these elements: spring, memories, believe. ",
-          },
-        ],
-        temperature: 0.5,
-        max_tokens: 1024,
-        top_p: 0.7,
-      });
-
-      console.log(out.choices[0].message);
-    } catch (e) {
-      console.log(e);
+    return {
+      success: true,
+      message: out.choices[0].message.content
+    };
+  } catch (e: unknown) {
+    console.log(e);
+    return {
+      success: false,
+      message: "Something went wrong."
     }
   }
-
-  return {
-    fetchResponse,
-  };
 }
