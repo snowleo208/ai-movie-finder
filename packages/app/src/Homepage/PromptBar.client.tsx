@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react";
-import { Button, TextField } from "@radix-ui/themes";
+import { Button, Flex, Text, TextField } from "@radix-ui/themes";
 import { fetchResponse } from "./useAiModel.ts";
 
 type CurrentState = 'empty' | "loaded" | "error" | "loading";
@@ -28,15 +28,18 @@ export const PromptBar = () => {
 
     return (
         <>
+            {/* @ts-ignore: for server action even with types/react@18.3, see if can be fixed properly? */}
             <form action={onSubmit}>
-                <TextField.Root placeholder="Input prompt" />
-                <Button type="submit">Let's go</Button>
+                <Flex gap="2">
+                    <TextField.Root placeholder="Input prompt" />
+                    <Button type="submit">Generate</Button>
+                </Flex>
             </form>
 
             {currentState === 'loaded' && results.split('\n').map((item, index) => (<p key={`${item}_${index}`}>{item}</p>))}
 
             <div aria-live="polite">
-                {currentState === 'error' && <p>Sorry, something went wrong.</p>}
+                {currentState === 'error' && <Text as="p" color="tomato" size="2">Sorry, something went wrong.</Text>}
             </div>
         </>
     );
