@@ -4,7 +4,7 @@ import { HfInference } from "@huggingface/inference";
 
 export async function fetchResponse() {
   try {
-    const accessToken = process.env.HF_TOKEN;
+    const accessToken = process.env.NEXT_PUBLIC_HF_TOKEN;
     const inference = new HfInference(accessToken);
 
     const out = await inference.chatCompletion({

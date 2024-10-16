@@ -2,14 +2,15 @@
   "name": "app-ai",
   "private": true,
   "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
-    "lint": "turbo lint",
-    "test": "turbo run test",
-    "test:watch": "turbo run test:watch",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "build": "dotenvx run -- turbo build",
+    "dev": "dotenvx run -- turbo dev",
+    "lint": "dotenvx run -- turbo lint",
+    "test": "dotenvx run -- turbo run test",
+    "test:watch": "dotenvx run -- turbo run test:watch",
+    "format": "dotenvx run -- prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
+    "@dotenvx/dotenvx": "1.19.3",
     "prettier": "3.3.3",
     "turbo": "2.1.3",
     "typescript": "5.5.4"
