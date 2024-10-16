@@ -36,7 +36,10 @@ export const PromptBar = () => {
                 </Flex>
             </form>
 
-            {currentState === 'loaded' && results.split('\n').map((item, index) => (<p key={`${item}_${index}`}>{item}</p>))}
+            {currentState === 'loaded' && <div>
+                <Text as="p"><strong>Results: </strong></Text>
+                {results.split('\n').map((item, index) => (<Text as="p" key={`${item}_${index}`}>{item}</Text>))}
+            </div>}
 
             <div aria-live="polite">
                 {currentState === 'error' && <Text as="p" color="tomato" size="2">Sorry, something went wrong.</Text>}
