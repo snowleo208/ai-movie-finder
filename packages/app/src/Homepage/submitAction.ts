@@ -2,8 +2,19 @@
 
 import { HfInference } from "@huggingface/inference";
 
-export async function fetchResponse() {
+export type Results = {
+  success: boolean;
+  message: string
+} | null
+
+export async function submitAction(_prevState: Results, formData: FormData) {
   try {
+    const prompt = formData.get('prompt')?.toString();
+
+    if (!prompt) {
+      throw new Error("Prompt is invalid.")
+    }
+
     const accessToken = process.env.NEXT_PUBLIC_HF_TOKEN;
     const inference = new HfInference(accessToken);
 
@@ -13,7 +24,7 @@ export async function fetchResponse() {
         {
           role: "user",
           content:
-            "Write a haiku using these elements: spring, memories, believe. ",
+            `Write a haiku using these elements: ${prompt}`,
         },
       ],
       temperature: 0.5,
