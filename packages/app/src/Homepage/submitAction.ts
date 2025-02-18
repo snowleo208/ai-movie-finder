@@ -33,7 +33,7 @@ export async function submitAction(_prevState: Results, formData: FormData) {
 
     return {
       success: true,
-      message: out.choices[0].message.content,
+      message: out?.choices[0]?.message?.content ?? '',
     };
   } catch (e: unknown) {
     console.log(e);
