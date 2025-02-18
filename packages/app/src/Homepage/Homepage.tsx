@@ -1,5 +1,5 @@
 import { Flex, Text } from "@radix-ui/themes";
-import { PromptBar } from "./PromptBar.client";
+import { PromptBar } from "../components/PromptBar.client";
 
 export const Homepage = async () => {
   return (

@@ -1,11 +1,14 @@
 "use server";
 
 import { HfInference } from "@huggingface/inference";
+import pino from 'pino';
 
 export type Results = {
   success: boolean;
   message: string;
 } | null;
+
+const logger = pino();
 
 export async function submitAction(_prevState: Results, formData: FormData) {
   try {
@@ -36,7 +39,8 @@ export async function submitAction(_prevState: Results, formData: FormData) {
       message: out?.choices[0]?.message?.content ?? '',
     };
   } catch (e: unknown) {
-    console.log(e);
+    logger.error(e);
+
     return {
       success: false,
       message: "Something went wrong.",
