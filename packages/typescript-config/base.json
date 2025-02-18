@@ -18,10 +18,6 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2023",
-    "jsx": "react-jsx",
-    "allowJs": false,
-    "allowSyntheticDefaultImports": true,
-    "allowImportingTsExtensions": true
+    "target": "ES2022"
   }
 }

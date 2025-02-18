@@ -1,18 +1,18 @@
-'use server';
+"use server";
 
 import { HfInference } from "@huggingface/inference";
 
 export type Results = {
   success: boolean;
-  message: string
-} | null
+  message: string;
+} | null;
 
 export async function submitAction(_prevState: Results, formData: FormData) {
   try {
-    const prompt = formData.get('prompt')?.toString();
+    const prompt = formData.get("prompt")?.toString();
 
     if (!prompt) {
-      throw new Error("Prompt is invalid.")
+      throw new Error("Prompt is invalid.");
     }
 
     const accessToken = process.env.NEXT_PUBLIC_HF_TOKEN;
@@ -23,8 +23,7 @@ export async function submitAction(_prevState: Results, formData: FormData) {
       messages: [
         {
           role: "user",
-          content:
-            `Write a haiku using these elements: ${prompt}`,
+          content: `Write a haiku using these elements: ${prompt}`,
         },
       ],
       temperature: 0.5,
@@ -34,13 +33,13 @@ export async function submitAction(_prevState: Results, formData: FormData) {
 
     return {
       success: true,
-      message: out.choices[0].message.content
+      message: out.choices[0].message.content,
     };
   } catch (e: unknown) {
     console.log(e);
     return {
       success: false,
-      message: "Something went wrong."
-    }
+      message: "Something went wrong.",
+    };
   }
 }

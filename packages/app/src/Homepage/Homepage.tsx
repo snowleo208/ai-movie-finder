@@ -1,6 +1,5 @@
-import { Flex, Text, Button } from "@radix-ui/themes";
-// import { fetchResponse } from "./useAiModel.ts";
-import { PromptBar } from "./PromptBar.client.tsx";
+import { Flex, Text } from "@radix-ui/themes";
+import { PromptBar } from "./PromptBar.client";
 
 export const Homepage = async () => {
   return (

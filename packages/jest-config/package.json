@@ -2,7 +2,8 @@
   "name": "@repo/jest-config",
   "version": "0.0.0",
   "private": true,
-  "main": "./index.js",
+  "type": "module",
+  "main": "./index.ts",
   "devDependencies": {
     "@testing-library/dom": "10.4.0",
     "@testing-library/jest-dom": "6.6.3",

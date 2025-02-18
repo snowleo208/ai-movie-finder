@@ -2,7 +2,6 @@
   "name": "@repo/app",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
   "exports": {
     "./button": "./src/button/button.tsx",
     "./homepage": "./src/Homepage/Homepage.tsx"
@@ -10,7 +9,8 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "lint": "eslint ."
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

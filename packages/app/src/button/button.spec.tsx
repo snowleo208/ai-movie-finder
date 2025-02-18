@@ -19,7 +19,7 @@ describe("Button", () => {
   it("Renders correctly", () => {
     renderComponent();
     expect(
-      screen.getByRole("button", { name: "Button here" })
+      screen.getByRole("button", { name: "Button here" }),
     ).toBeInTheDocument();
   });
 });
