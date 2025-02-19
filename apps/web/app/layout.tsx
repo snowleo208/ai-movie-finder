@@ -16,8 +16,8 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Theme
-          accentColor="mint"
-          grayColor="sand"
+          accentColor="pink"
+          grayColor="mauve"
           radius="large"
           scaling="100%"
         >

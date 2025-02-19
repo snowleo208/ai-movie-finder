@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack --port 3000",
+    "dev": "next dev --port 3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint --max-warnings 0",
@@ -15,7 +15,10 @@
     "@radix-ui/themes": "3.2.0",
     "next": "15.1.7",
     "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react-dom": "19.0.0",
+    "pino": "9.6.0",
+    "@ai-sdk/groq": "1.1.10",
+    "ai": "4.1.42"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

@@ -6,5 +6,8 @@ export default {
   transform: {
     "^.+\\.tsx?$": ["ts-jest", { tsconfig: "tsconfig.test.json" }],
   },
+  "moduleNameMapper": {
+    '^ai/rsc$': '<rootDir>/node_modules/ai/rsc/dist'
+  },
   setupFilesAfterEnv: ["<rootDir>/jest-setup-after.ts"],
 } satisfies Config;
