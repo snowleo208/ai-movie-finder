@@ -18,7 +18,8 @@
     "react-dom": "19.1.0",
     "pino": "9.7.0",
     "@ai-sdk/groq": "1.2.9",
-    "ai": "4.3.16"
+    "ai": "4.3.16",
+    "zod": "3.25.71"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

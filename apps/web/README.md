@@ -5,32 +5,117 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 First, run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load Inter, a custom Google Font.
+Ohhhh now we’re cooking. 🔥
 
-## Learn More
+You're not just aiming for *"I built a testable chatbot UI"* — you’re aiming for:
 
-To learn more about Next.js, take a look at the following resources:
+> ✅ *A minimal, testable AI-powered tool that’s actually **useful**.*
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+That’s the sweet spot.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🎬 Idea: **“Today’s Movie Suggestion”** (AI-Powered)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+A tiny app that:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Takes **mood / genre / time available**
+2. Sends prompt to AI (`/api/movie`)
+3. Streams back a **movie recommendation with explanation**
+4. Bonus: Let user say “give me another one”
+
+Mood: 😎 Chill / 😭 Sad / 🤯 Mind-blowing / 🤣 Funny
+
+[ 😄 Happy ] [ 😢 Sad ] [ 🤔 Thoughtful ] [ ✍️ Custom... ]
+
+Genre: Drama, Sci-fi, Animation, Romance
+
+Length: < 90min, 1–2h, 2h+
+
+
+Suggest one movie that fits the following preferences:
+- Mood: {mood}
+- Genre: {genre}
+- Length: {length}
+
+Include:
+- Title (with release year)
+- 1–2 sentence explanation of why it's a good fit
+- Runtime in minutes (if known)
+
+Do NOT include more than one movie. Only return one suggestion.
+
+
+### Example Interaction:
+
+```txt
+User: I'm feeling nostalgic, want something under 2 hours.
+
+AI:
+🎬 *Stand By Me* (1986)  
+A heartfelt coming-of-age story with friendship and adventure — and it clocks in at just 89 minutes.
+```
+
+---
+
+### ✅ Why this is a great project:
+
+| Quality                      | Why it’s awesome                                       |
+| ---------------------------- | ------------------------------------------------------ |
+| ✅ Useful                     | Genuinely fun and practical                            |
+| ✅ Testable                   | Streams back AI suggestions you can test incrementally |
+| ✅ Personalizable             | Moods, genres, length, etc.                            |
+| ✅ No real data source needed | All from the LLM                                       |
+| ✅ Small scope                | You can finish it in a weekend or two                  |
+
+---
+
+## 🧪 What you can test
+
+* Shows loading state while streaming
+* UI updates progressively
+* Retry button works
+* Errors handled
+* Stream cancels mid-recommendation
+
+---
+
+## 💡 Optional Add-ons
+
+* Save to favorites (store in localStorage)
+* “Already watched” thumbs-down to reroll
+* Light/dark mode toggle (just for style)
+* Surprise me! button (no input needed)
+
+---
+
+## 📝 Blog Value
+
+This becomes **more than a UI test article** — it’s:
+
+* How to stream AI responses
+* How to test streaming text
+* How to build a *real* microproduct with LLMs
+
+---
+
+## 🧠 TL;DR
+
+> You want a small, testable AI app that feels useful?
+> ✅ A "Today’s Movie Suggestion" streaming chatbot is **perfect**.
+
+It hits:
+
+* LLM prompting
+* Streaming response
+* Real value
+* Fully testable logic
+
+Let me know if you want help designing the prompt or testing strategy — or if you’re ready to roll solo again like your map app 😎
