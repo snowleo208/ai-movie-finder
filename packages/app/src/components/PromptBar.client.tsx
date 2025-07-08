@@ -4,11 +4,11 @@ import { Button, Flex, Text, Select } from "@radix-ui/themes";
 
 import { useCompletion } from "@ai-sdk/react";
 import { useState } from "react";
+import { MarkdownDisplay } from "./MarkdownText.client";
 
 const LIST_OF_GENRES = ['Mystery', 'Comedy', 'Drama', 'Action', 'Horror', 'Sci-Fi', 'Romance'];
 
 const LIST_OF_HOURS = {
-  "30min": "30 minutes",
   "1hr": "1 hour",
   "2hr": "2 hours",
   "2hr-more": "2 hours+",
@@ -18,7 +18,7 @@ export const PromptBar = () => {
   const [selectedHour, setSelectedHour] = useState<keyof typeof LIST_OF_HOURS>("2hr");
   const [selectedGenre, setSelectedGenre] = useState("Mystery");
 
-  const { isLoading, completion, error, setInput, handleSubmit } = useCompletion({
+  const { isLoading, stop, completion, error, setInput, handleSubmit } = useCompletion({
     api: '/api/completion',
     initialInput: JSON.stringify({ hour: LIST_OF_HOURS[selectedHour], genre: selectedGenre }),
   });
@@ -44,6 +44,7 @@ export const PromptBar = () => {
 
   return (
     <>
+      <h1>What Should I Watch? Ask the AI</h1>
       <form onSubmit={handleSubmit}>
         <Flex gap="2">
           <Select.Root defaultValue="Mystery" onValueChange={handleGenreChange}>
@@ -73,21 +74,20 @@ export const PromptBar = () => {
           <Button type="submit" disabled={isLoading}>
             Submit
           </Button>
+          <Button onClick={stop} disabled={!isLoading}>Stop</Button>
         </Flex>
       </form>
 
       <div>
-        {isLoading && <Text as="p">Loading...</Text>}
+        {isLoading && !completion && <Text as="p">Loading...</Text>}
 
-        {!isLoading && completion && (
-          <div>
+        {completion && (
+          <div data-testid="completion">
             <Text as="p">
               <strong>Results: </strong>
             </Text>
             {completion.split("\n").map((item, index) => (
-              <Text as="p" key={`${item}_${index}`}>
-                {item}
-              </Text>
+              <MarkdownDisplay content={item} key={`${item}_${index}`} />
             ))}
           </div>
         )}

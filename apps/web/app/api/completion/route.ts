@@ -2,7 +2,6 @@ import { streamText } from 'ai';
 import { groq } from '@ai-sdk/groq';
 import { z } from 'zod';
 
-// Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
 const promptSchema = z.string().refine((value) => {
@@ -15,41 +14,42 @@ const promptSchema = z.string().refine((value) => {
 }).transform((value) => JSON.parse(value));
 
 export async function POST(req: Request) {
-    const body = await req.json();
+    try {
+        const body = await req.json();
 
-    // Validate the request body against the schema
-    const validationResult = promptSchema.safeParse(body.prompt);
-    if (!validationResult.success) {
-        return new Response(
-            JSON.stringify({ error: "Invalid prompt structure", details: validationResult.error.errors }),
-            { status: 400, headers: { 'Content-Type': 'application/json' } }
-        );
-    }
+        const validationResult = promptSchema.safeParse(body.prompt);
 
-    const prompt = validationResult.data;
+        if (!validationResult.success) {
+            return new Response(
+                JSON.stringify({ error: "Invalid prompt structure", details: validationResult.error.errors }),
+                { status: 400, headers: { 'Content-Type': 'application/json' }, statusText: 'Invalid prompt structure' }
+            );
+        }
 
+        const prompt = validationResult.data;
 
-    console.log(prompt);
-
-    const result = streamText({
-        model: groq('llama-3.1-8b-instant'),
-        prompt: `
+        const result = streamText({
+            model: groq('llama-3.1-8b-instant'),
+            onError: (error) => {
+                console.error("Error in AI response:", error)
+            },
+            prompt: `
         Suggest one movie that fits the following preferences: 
         Genre: ${prompt.genre}
         Length: ${prompt.hour}
         Include: 
         - Title (with release year) 
-        - 1–2 sentence explanation of why it's a good fit
-
-        Return the response in JSON format with the following structure:
-        {
-            "title": "Movie Title",
-            "year": "Year",
-            "explanation": "Brief explanation of why this movie fits the preferences.",
-        }
+        - 500 words (without spoilers) of why it's a good fit
         
         Do NOT include more than one movie. Only return one suggestion.`,
-    });
+        });
 
-    return result.toDataStreamResponse();
+        return result.toDataStreamResponse();
+    } catch (e) {
+        console.error("Error processing request:", e);
+        return new Response(
+            JSON.stringify({ error: "An error occurred while processing your request." }),
+            { status: 500, headers: { 'Content-Type': 'application/json' } }
+        );
+    }
 }
