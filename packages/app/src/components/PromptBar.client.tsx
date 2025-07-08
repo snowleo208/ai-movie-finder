@@ -44,7 +44,6 @@ export const PromptBar = () => {
 
   return (
     <>
-      <h1>What Should I Watch? Ask the AI</h1>
       <form onSubmit={handleSubmit}>
         <Flex gap="2">
           <Select.Root defaultValue="Mystery" onValueChange={handleGenreChange}>
@@ -83,9 +82,6 @@ export const PromptBar = () => {
 
         {completion && (
           <div data-testid="completion">
-            <Text as="p">
-              <strong>Results: </strong>
-            </Text>
             {completion.split("\n").map((item, index) => (
               <MarkdownDisplay content={item} key={`${item}_${index}`} />
             ))}

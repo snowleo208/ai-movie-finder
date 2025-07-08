@@ -60,6 +60,7 @@ describe("Prompt Bar", () => {
     it("renders correctly", () => {
         renderComponent();
         expect(screen.getByRole("button", { name: "Submit" })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "Stop" })).toBeInTheDocument();
     });
 
     it("displays loading state when submitting", async () => {
