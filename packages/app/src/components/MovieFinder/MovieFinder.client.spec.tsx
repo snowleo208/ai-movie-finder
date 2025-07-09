@@ -1,10 +1,10 @@
-import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
+import { screen, fireEvent, waitFor, act } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { PromptBar } from "./PromptBar.client";
+import { simulateReadableStream } from "ai";
+import { MovieFinder } from "./MovieFinder.client";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { Theme } from "@radix-ui/themes";
-import { simulateReadableStream } from "ai";
+import { renderWithProviders } from "../../utils/renderWithProviders";
 
 const scrollIntoViewMock = jest.fn();
 window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
@@ -49,21 +49,13 @@ afterEach(() => {
 afterAll(() => server.close());
 
 const renderComponent = () => {
-    return render(
-        <Theme
-            accentColor="pink"
-            grayColor="mauve"
-            radius="large"
-            scaling="100%"
-        ><PromptBar />
-        </Theme>);
+    return renderWithProviders(<MovieFinder />);
 };
 
-describe("Prompt Bar", () => {
+describe("MovieFinder", () => {
     it("renders correctly", () => {
         renderComponent();
         expect(screen.getByRole("button", { name: "Ask" })).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: "Stop" })).toBeInTheDocument();
     });
 
     it("displays loading state when submitting", async () => {

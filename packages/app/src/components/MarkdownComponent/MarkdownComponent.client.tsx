@@ -1,7 +1,7 @@
 import { Em, Strong, Text } from '@radix-ui/themes';
 import ReactMarkdown from 'react-markdown';
 
-export const MarkdownDisplay = ({ content }: { content: string }) => {
+export const MarkdownComponent = ({ content }: { content: string }) => {
     return (
         <ReactMarkdown
             components={{

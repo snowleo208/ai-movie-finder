@@ -1,16 +1,9 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { Homepage } from "./Homepage";
-import { Theme } from "@radix-ui/themes";
+import { renderWithProviders } from "../utils/renderWithProviders";
 
 const renderComponent = () => {
-    return render(
-        <Theme
-            accentColor="pink"
-            grayColor="mauve"
-            radius="large"
-            scaling="100%"
-        ><Homepage />
-        </Theme>);
+    return renderWithProviders(<Homepage />);
 };
 
 describe("Homepage", () => {
