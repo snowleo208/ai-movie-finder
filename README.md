@@ -1,4 +1,4 @@
-# AI-Powered Movie Selector and Testing Example
+# AI-Powered Movie Selector
 
 This repository is a sample project demonstrating how to write tests using the Vercel AI SDK.
 
@@ -48,6 +48,6 @@ pnpm test
 Learn more about the tools and technologies used in this project:
 
 - [Vercel AI SDK](https://vercel.com/docs/ai)
+- [Turborepo](https://turbo.build/repo/docs)
 - [React](https://reactjs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
-- [Turborepo](https://turbo.build/repo/docs)
