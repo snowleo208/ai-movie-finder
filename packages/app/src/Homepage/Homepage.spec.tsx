@@ -6,6 +6,10 @@ const renderComponent = () => {
     return renderWithProviders(<Homepage />);
 };
 
+afterEach(() => {
+    jest.clearAllMocks();
+});
+
 describe("Homepage", () => {
     it("renders the homepage correctly", async () => {
         renderComponent()

@@ -26,6 +26,10 @@ const renderComponent = (props: MovieSelectBarProps = defaultProps) => {
     );
 };
 
+afterEach(() => {
+    jest.clearAllMocks();
+});
+
 describe("MovieSelectBar", () => {
     it("renders correctly", () => {
         renderComponent();

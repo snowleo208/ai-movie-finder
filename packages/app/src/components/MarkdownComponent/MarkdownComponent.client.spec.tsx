@@ -9,6 +9,10 @@ const renderComponent = () => {
         />);
 };
 
+afterEach(() => {
+    jest.clearAllMocks();
+});
+
 describe("MarkdownComponent", () => {
     it("renders correctly", () => {
         renderComponent();

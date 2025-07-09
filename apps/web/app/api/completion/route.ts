@@ -33,6 +33,7 @@ export async function POST(req: Request) {
             onError: (error) => {
                 console.error("Error in AI response:", error)
             },
+            abortSignal: req.signal,
             prompt: `
         Suggest one movie that fits the following preferences: 
         Genre: ${prompt.genre}
