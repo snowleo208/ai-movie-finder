@@ -39,7 +39,7 @@ export const PromptBar = () => {
 
   const handleGenreChange = (genre: string) => {
     setSelectedGenre(genre);
-    setInput(JSON.stringify({ hour: selectedHour, genre: genre }));
+    setInput(JSON.stringify({ hour: LIST_OF_HOURS[selectedHour], genre: genre }));
   };
 
   return (
@@ -47,7 +47,7 @@ export const PromptBar = () => {
       <form onSubmit={handleSubmit}>
         <Flex gap="2">
           <Select.Root defaultValue="Mystery" onValueChange={handleGenreChange}>
-            <Select.Trigger />
+            <Select.Trigger aria-label="Select genre" />
             <Select.Content>
               <Select.Group>
                 <Select.Label>Select genre</Select.Label>
@@ -61,7 +61,7 @@ export const PromptBar = () => {
           </Select.Root>
 
           <Select.Root defaultValue="2hr" onValueChange={handleHourChange}>
-            <Select.Trigger />
+            <Select.Trigger aria-label="Select length" />
             <Select.Content>
               <Select.Group>
                 <Select.Label>Select length</Select.Label>

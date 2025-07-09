@@ -6,14 +6,17 @@ import { setupServer } from "msw/node";
 import { Theme } from "@radix-ui/themes";
 import { simulateReadableStream } from "ai";
 
+const scrollIntoViewMock = jest.fn();
+window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
+
 const server = setupServer(
     http.post('/api/completion', async ({ request }) => {
         const data = await request.clone().json();
 
         const prompt = JSON.parse(data.prompt);
 
-        const genreText = prompt.genre === 'Romance' ? `romance movie` : 'movie';
-        const hourText = prompt.hour === '30 Minutes' ? `30-minute` : '2-hour';
+        const genreText = prompt.genre ? `${String(prompt.genre).toLowerCase()} movie` : 'movie';
+        const hourText = prompt.hour ?? 'no length specified';
 
         // https://ai-sdk.dev/docs/ai-sdk-core/testing#simulate-data-stream-protocol-responses
         const stream = simulateReadableStream({
@@ -71,34 +74,27 @@ describe("Prompt Bar", () => {
         expect(screen.getByText("Loading...")).toBeInTheDocument();
     });
 
-    it("displays results after successful submission", async () => {
+    it.each([
+        ['genre to Romance', 'Select genre', 'Romance', 'This is a 2 hours example romance movie.'],
+        ['genre to Mystery', 'Select genre', 'Mystery', 'This is a 2 hours example mystery movie.'],
+        ['genre to Sci-Fi', 'Select genre', 'Sci-Fi', 'This is a 2 hours example sci-fi movie.'],
+        ['length to 1 hour', 'Select length', '1 hour', 'This is a 1 hour example mystery movie.'],
+        ['length to 2 hours', 'Select length', '2 hours', 'This is a 2 hours example mystery movie.'],
+        ['length to 2 hours+', 'Select length', '2 hours+', 'This is a 2 hours+ example mystery movie.'],
+    ])("displays results when changed %s", async (_, selectLabel, optionName, expectedText) => {
         renderComponent();
 
-        const submitButton = screen.getByRole("button", { name: "Submit" });
-        fireEvent.click(submitButton);
+        const select = screen.getByRole("combobox", { name: selectLabel });
+        expect(select).toBeInTheDocument();
+        fireEvent.click(select);
 
-        expect(await screen.findByText("Loading...")).toBeInTheDocument();
-
-        expect(await screen.findByText("This is a 2-hour example movie.")).toBeInTheDocument();
-    });
-
-    // TODO: fix the problem with select component
-    it.skip("displays results when changed genre", async () => {
-        renderComponent();
-
-        const genreSelect = screen.getByRole("combobox", { name: "Select genre" });
-        expect(genreSelect).toBeInTheDocument();
-        fireEvent.click(genreSelect);
-
-        const option = screen.getByRole('option', { name: 'Romance' });
+        const option = screen.getByRole('option', { name: optionName });
         fireEvent.click(option);
 
         const submitButton = screen.getByRole("button", { name: "Submit" });
         fireEvent.click(submitButton);
 
-        expect(await screen.findByText("Loading...")).toBeInTheDocument();
-
-        expect(await screen.findByText("This is a 2-hour example romance movie.")).toBeInTheDocument();
+        expect(await screen.findByText(expectedText)).toBeInTheDocument();
     });
 
     it("stops messages when user clicked stop button", async () => {
@@ -197,7 +193,7 @@ describe("Prompt Bar", () => {
 
     });
 
-    it("displays an error message when there's rate-limit errors", async () => {
+    it("displays an error message when there's a rate-limit error", async () => {
         server.use(
             http.post('/api/completion', () => {
                 const stream = simulateReadableStream({
