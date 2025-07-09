@@ -40,6 +40,19 @@ export async function POST(req: Request) {
         Include: 
         - Title (with release year) 
         - 500 words (without spoilers) of why it's a good fit
+
+        ---
+
+        Use this format:
+
+        **Movie Suggestion: ** <Movie Title (Year)>
+        **Genre:** <genre here>
+        **Length:** <length in hours>
+
+        **Why it's a good fit: **
+        <Reason here>
+
+        ---
         
         Do NOT include more than one movie. Only return one suggestion.`,
         });

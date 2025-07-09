@@ -1,6 +1,8 @@
 "use client";
 
-import { Button, Flex, Text, Select } from "@radix-ui/themes";
+import { Button, Flex, Select, Callout, Spinner, Separator, VisuallyHidden } from "@radix-ui/themes";
+
+
 
 import { useCompletion } from "@ai-sdk/react";
 import { useState } from "react";
@@ -71,29 +73,36 @@ export const PromptBar = () => {
           </Select.Root>
 
           <Button type="submit" disabled={isLoading}>
-            Submit
+            Ask
           </Button>
           <Button onClick={stop} disabled={!isLoading}>Stop</Button>
         </Flex>
       </form>
 
-      <div>
-        {isLoading && !completion && <Text as="p">Loading...</Text>}
+      <Separator my="3" size="4" />
+
+      <Flex gap="2">
+        {isLoading && !completion && <div>
+          <Spinner />
+          <VisuallyHidden>Loading...</VisuallyHidden>
+        </div>}
 
         {completion && (
-          <div data-testid="completion">
+          <Flex direction="column" gap="2" data-testid="completion">
             {completion.split("\n").map((item, index) => (
               <MarkdownDisplay content={item} key={`${item}_${index}`} />
             ))}
-          </div>
+          </Flex>
         )}
-      </div>
+      </Flex>
 
       <div aria-live="polite">
         {!isLoading && error && (
-          <Text as="p" color="tomato" size="2">
-            {error.message.includes('limit') ? 'You have reached the limit of requests.' : 'Sorry, something went wrong.'}
-          </Text>
+          <Callout.Root color="red">
+            <Callout.Text>
+              {error.message.includes('limit') ? 'You have reached the limit of requests.' : 'Sorry, something went wrong.'}
+            </Callout.Text>
+          </Callout.Root>
         )}
       </div>
     </>

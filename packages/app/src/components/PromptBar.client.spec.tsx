@@ -62,13 +62,13 @@ const renderComponent = () => {
 describe("Prompt Bar", () => {
     it("renders correctly", () => {
         renderComponent();
-        expect(screen.getByRole("button", { name: "Submit" })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "Ask" })).toBeInTheDocument();
         expect(screen.getByRole("button", { name: "Stop" })).toBeInTheDocument();
     });
 
     it("displays loading state when submitting", async () => {
         renderComponent();
-        const submitButton = screen.getByRole("button", { name: "Submit" });
+        const submitButton = screen.getByRole("button", { name: "Ask" });
         fireEvent.click(submitButton);
 
         expect(screen.getByText("Loading...")).toBeInTheDocument();
@@ -91,7 +91,7 @@ describe("Prompt Bar", () => {
         const option = screen.getByRole('option', { name: optionName });
         fireEvent.click(option);
 
-        const submitButton = screen.getByRole("button", { name: "Submit" });
+        const submitButton = screen.getByRole("button", { name: "Ask" });
         fireEvent.click(submitButton);
 
         expect(await screen.findByText(expectedText)).toBeInTheDocument();
@@ -127,7 +127,7 @@ describe("Prompt Bar", () => {
 
         renderComponent();
 
-        const submitButton = screen.getByRole("button", { name: "Submit" });
+        const submitButton = screen.getByRole("button", { name: "Ask" });
         fireEvent.click(submitButton);
 
         expect(await screen.findByText("Loading...")).toBeInTheDocument();
@@ -178,7 +178,7 @@ describe("Prompt Bar", () => {
 
         renderComponent();
 
-        const submitButton = screen.getByRole("button", { name: "Submit" });
+        const submitButton = screen.getByRole("button", { name: "Ask" });
         fireEvent.click(submitButton);
 
         expect(await screen.findByText("Loading...")).toBeInTheDocument();
@@ -217,7 +217,7 @@ describe("Prompt Bar", () => {
 
         renderComponent();
 
-        const submitButton = screen.getByRole("button", { name: "Submit" });
+        const submitButton = screen.getByRole("button", { name: "Ask" });
         fireEvent.click(submitButton);
 
         expect(await screen.findByText("Loading...")).toBeInTheDocument();
@@ -237,7 +237,7 @@ describe("Prompt Bar", () => {
         );
 
         renderComponent();
-        const submitButton = screen.getByRole("button", { name: "Submit" });
+        const submitButton = screen.getByRole("button", { name: "Ask" });
         fireEvent.click(submitButton);
 
         const errorText = await screen.findByText("Sorry, something went wrong.");

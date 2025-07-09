@@ -17,8 +17,8 @@ describe("Homepage", () => {
     it("renders the homepage correctly", async () => {
         renderComponent()
 
-        expect(screen.getByRole("heading", { name: 'What Should I Watch? Ask the AI', level: 1 })).toBeInTheDocument();
+        expect(screen.getByRole("heading", { name: 'What Should I Watch Tonight?', level: 1 })).toBeInTheDocument();
 
-        expect(screen.getByRole("button", { name: 'Submit' })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: 'Ask' })).toBeInTheDocument();
     });
 });
