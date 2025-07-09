@@ -56,7 +56,6 @@ describe('api/completion', () => {
 
         expect(response.status).toEqual(200);
         expect(response.body).toBeInstanceOf(ReadableStream);
-
     });
 
     it('should return error when prompt data is invalid', async () => {

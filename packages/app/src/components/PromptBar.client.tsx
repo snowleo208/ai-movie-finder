@@ -92,7 +92,7 @@ export const PromptBar = () => {
       <div aria-live="polite">
         {!isLoading && error && (
           <Text as="p" color="tomato" size="2">
-            Sorry, something went wrong.
+            {error.message.includes('limit') ? 'You have reached the limit of requests.' : 'Sorry, something went wrong.'}
           </Text>
         )}
       </div>

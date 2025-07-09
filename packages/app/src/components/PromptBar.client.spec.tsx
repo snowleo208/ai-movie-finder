@@ -197,6 +197,42 @@ describe("Prompt Bar", () => {
 
     });
 
+    it("displays an error message when there's rate-limit errors", async () => {
+        server.use(
+            http.post('/api/completion', () => {
+                const stream = simulateReadableStream({
+                    chunks: [
+                        `0:"First part "\n`,
+                        '3:"OpenAI: rate-limit exceeded"\n',
+                        'e:{"finishReason":"error","usage":{"promptTokens":20,"completionTokens":0},"isContinued":false}\n',
+                        'd:{"finishReason":"error","usage":{"promptTokens":20,"completionTokens":0}}\n',
+                    ],
+                }).pipeThrough(new TextEncoderStream());
+
+                return new HttpResponse(stream, {
+                    status: 200,
+                    headers: {
+                        'X-Vercel-AI-Data-Stream': 'v1',
+                        'Content-Type': 'text/plain; charset=utf-8',
+                    },
+                });
+            })
+        );
+
+        renderComponent();
+
+        const submitButton = screen.getByRole("button", { name: "Submit" });
+        fireEvent.click(submitButton);
+
+        expect(await screen.findByText("Loading...")).toBeInTheDocument();
+
+        expect(await screen.findByText("First part")).toBeInTheDocument();
+
+
+        const errorText = await screen.findByText("You have reached the limit of requests.");
+        expect(errorText).toBeInTheDocument();
+    });
+
     it("displays error message on API failure", async () => {
         server.use(
             http.post('/api/completion', () => {
