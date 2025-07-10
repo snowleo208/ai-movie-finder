@@ -1,10 +1,10 @@
-# AI-Powered Movie Selector
+# AI-Powered Movie Finder
 
 This repository is a sample project demonstrating how to write tests using the Vercel AI SDK.
 
 ## Features
 
-- **AI-Powered Movie Selector**: Choose a genre and movie length, and let the AI recommend what to watch.
+- **AI-Powered Movie Finder**: Choose a genre and movie length, and let the AI recommend what to watch.
 - **Testing with Vercel AI SDK**: Learn how to write tests for components and functionality powered by AI.
 
 ## Getting Started
