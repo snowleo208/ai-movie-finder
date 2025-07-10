@@ -1,4 +1,4 @@
-import { screen, fireEvent, waitFor, act } from "@testing-library/react";
+import { screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { simulateReadableStream } from "ai";
 import { MovieFinder } from "./MovieFinder.client";
@@ -63,10 +63,10 @@ describe("MovieFinder", () => {
 
     it("displays loading state when submitting", async () => {
         renderComponent();
-        const submitButton = screen.getByRole("button", { name: "Ask" });
-        fireEvent.click(submitButton);
+        const askButton = screen.getByRole("button", { name: "Ask" });
+        fireEvent.click(askButton);
 
-        expect(screen.getByText("Loading...")).toBeInTheDocument();
+        expect(await screen.findByText("Loading...")).toBeInTheDocument();
     });
 
     it.each([
@@ -86,8 +86,8 @@ describe("MovieFinder", () => {
         const option = screen.getByRole('option', { name: optionName });
         fireEvent.click(option);
 
-        const submitButton = screen.getByRole("button", { name: "Ask" });
-        fireEvent.click(submitButton);
+        const askButton = screen.getByRole("button", { name: "Ask" });
+        fireEvent.click(askButton);
 
         expect(await screen.findByText(expectedText)).toBeInTheDocument();
     });
@@ -144,8 +144,8 @@ describe("MovieFinder", () => {
 
         renderComponent();
 
-        const submitButton = screen.getByRole("button", { name: "Ask" });
-        fireEvent.click(submitButton);
+        const askButton = screen.getByRole("button", { name: "Ask" });
+        fireEvent.click(askButton);
 
         expect(await screen.findByText("Loading...")).toBeInTheDocument();
 
@@ -183,8 +183,8 @@ describe("MovieFinder", () => {
 
         renderComponent();
 
-        const submitButton = screen.getByRole("button", { name: "Ask" });
-        fireEvent.click(submitButton);
+        const askButton = screen.getByRole("button", { name: "Ask" });
+        fireEvent.click(askButton);
 
         expect(await screen.findByText("Loading...")).toBeInTheDocument();
 
@@ -203,10 +203,35 @@ describe("MovieFinder", () => {
         );
 
         renderComponent();
-        const submitButton = screen.getByRole("button", { name: "Ask" });
-        fireEvent.click(submitButton);
+        const askButton = screen.getByRole("button", { name: "Ask" });
+        fireEvent.click(askButton);
 
         const errorText = await screen.findByText("Sorry, something went wrong.");
         expect(errorText).toBeInTheDocument();
+    });
+
+    it("hides error message when user retry", async () => {
+        server.use(
+            http.post('/api/completion', () => {
+                return HttpResponse.error()
+            }, { once: true })
+        );
+
+        renderComponent();
+        const askButton = screen.getByRole("button", { name: "Ask" });
+        fireEvent.click(askButton);
+
+        const errorText = await screen.findByText("Sorry, something went wrong.");
+        expect(errorText).toBeInTheDocument();
+
+        // User clicks the Ask button again to retry
+        fireEvent.click(askButton);
+
+        await waitFor(() => {
+            expect(screen.queryByText("Sorry, something went wrong.")).not.toBeInTheDocument();
+        });
+
+        const results = await screen.findByText('This is a 2 hours example mystery movie.');
+        expect(results).toBeInTheDocument();
     });
 });
