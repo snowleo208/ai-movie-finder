@@ -14,6 +14,7 @@ To use this example, clone the repository and install dependencies:
 ```sh
 git clone git@github.com:snowleo208/ai-movie-finder.git
 cd ai-movie-finder
+cp apps/web/env.example apps/web/.env # Add your Groq API key to the `.env` file before running the app
 pnpm install
 ```
 
