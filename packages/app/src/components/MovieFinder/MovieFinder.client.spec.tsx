@@ -1,13 +1,13 @@
-import { screen, fireEvent, waitFor } from "@testing-library/react";
-import "@testing-library/jest-dom";
+import { screen, waitFor } from "@testing-library/react";
 import { simulateReadableStream } from "ai";
 import { MovieFinder } from "./MovieFinder.client";
-import { http, HttpResponse } from "msw";
+import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { renderWithProviders } from "../../utils/renderWithProviders";
 
-const scrollIntoViewMock = jest.fn();
-window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
+global.HTMLElement.prototype.scrollIntoView = jest.fn();
+global.HTMLElement.prototype.releasePointerCapture = jest.fn();
+global.HTMLElement.prototype.hasPointerCapture = jest.fn();
 
 const server = setupServer(
     http.post('/api/completion', async ({ request }) => {
@@ -20,7 +20,7 @@ const server = setupServer(
 
         // https://ai-sdk.dev/docs/ai-sdk-core/testing#simulate-data-stream-protocol-responses
         const stream = simulateReadableStream({
-            initialDelayInMs: 1,
+            initialDelayInMs: 100,
             chunkDelayInMs: 5,
             chunks: [
                 `0:"This"\n`,
@@ -47,6 +47,7 @@ afterEach(() => {
     jest.clearAllMocks();
     server.resetHandlers();
 });
+
 afterAll(() => server.close());
 
 const renderComponent = () => {
@@ -62,9 +63,9 @@ describe("MovieFinder", () => {
     });
 
     it("displays loading state when submitting", async () => {
-        renderComponent();
+        const { user } = renderComponent();
         const askButton = screen.getByRole("button", { name: "Ask" });
-        fireEvent.click(askButton);
+        await user.click(askButton);
 
         expect(await screen.findByText("Loading...")).toBeInTheDocument();
     });
@@ -77,17 +78,17 @@ describe("MovieFinder", () => {
         ['length to 2 hours', 'Select length', '2 hours', 'This is a 2 hours example mystery movie.'],
         ['length to 2 hours+', 'Select length', '2 hours+', 'This is a 2 hours+ example mystery movie.'],
     ])("displays results when changed %s", async (_, selectLabel, optionName, expectedText) => {
-        renderComponent();
+        const { user } = renderComponent();
 
         const select = screen.getByRole("combobox", { name: selectLabel });
         expect(select).toBeInTheDocument();
-        fireEvent.click(select);
+        await user.click(select);
 
-        const option = screen.getByRole('option', { name: optionName });
-        fireEvent.click(option);
+        const option = await screen.findByRole('option', { name: optionName });
+        await user.click(option);
 
         const askButton = screen.getByRole("button", { name: "Ask" });
-        fireEvent.click(askButton);
+        await user.click(askButton);
 
         expect(await screen.findByText(expectedText)).toBeInTheDocument();
     });
@@ -95,12 +96,12 @@ describe("MovieFinder", () => {
     it("stops when user clicked 'Stop' button", async () => {
         const abortSpy = jest.spyOn(AbortController.prototype, 'abort');
 
-        renderComponent();
+        const { user } = renderComponent();
 
         const askButton = screen.getByRole("button", { name: "Ask" });
         expect(screen.getByRole("button", { name: "Ask" })).toBeInTheDocument();
 
-        fireEvent.click(askButton);
+        await user.click(askButton);
 
         expect(await screen.findByText("Loading...")).toBeInTheDocument();
 
@@ -111,11 +112,10 @@ describe("MovieFinder", () => {
         });
 
         const stopButton = screen.getByRole("button", { name: "Stop" });
-        fireEvent.click(stopButton);
-
+        await user.click(stopButton);
 
         // Note: This test confirms that the Stop button triggers the SDK's abort logic.
-        // Due to MSW limitations, the mock fetch stream cannot respond to AbortSignal coming from Vercel ai-sdk.
+        // Due to MSW limitations, the mock fetch stream cannot respond to AbortSignal coming from Vercel ai-sdk in the middle of the test.
         // Unfortunately, this test does NOT verify that streaming is halted mid-request, it only asserts that .abort() was called.
         expect(abortSpy).toHaveBeenCalledTimes(1);
     });
@@ -124,6 +124,7 @@ describe("MovieFinder", () => {
         server.use(
             http.post('/api/completion', () => {
                 const stream = simulateReadableStream({
+                    initialDelayInMs: 100,
                     chunks: [
                         `0:"First part "\n`,
                         `⚠️bad data\n`,
@@ -142,10 +143,10 @@ describe("MovieFinder", () => {
             })
         );
 
-        renderComponent();
+        const { user } = renderComponent();
 
         const askButton = screen.getByRole("button", { name: "Ask" });
-        fireEvent.click(askButton);
+        await user.click(askButton);
 
         expect(await screen.findByText("Loading...")).toBeInTheDocument();
 
@@ -163,6 +164,7 @@ describe("MovieFinder", () => {
         server.use(
             http.post('/api/completion', () => {
                 const stream = simulateReadableStream({
+                    initialDelayInMs: 100,
                     chunks: [
                         `0:"First part "\n`,
                         '3:"OpenAI: rate-limit exceeded"\n',
@@ -181,10 +183,10 @@ describe("MovieFinder", () => {
             })
         );
 
-        renderComponent();
+        const { user } = renderComponent();
 
         const askButton = screen.getByRole("button", { name: "Ask" });
-        fireEvent.click(askButton);
+        await user.click(askButton);
 
         expect(await screen.findByText("Loading...")).toBeInTheDocument();
 
@@ -197,35 +199,37 @@ describe("MovieFinder", () => {
 
     it("displays error message on network error", async () => {
         server.use(
-            http.post('/api/completion', () => {
+            http.post('/api/completion', async () => {
+                await delay(100)
                 return HttpResponse.error()
             })
         );
 
-        renderComponent();
+        const { user } = renderComponent();
         const askButton = screen.getByRole("button", { name: "Ask" });
-        fireEvent.click(askButton);
+        await user.click(askButton);
 
         const errorText = await screen.findByText("Sorry, something went wrong.");
         expect(errorText).toBeInTheDocument();
     });
 
-    it("hides error message when user retry", async () => {
+    it("hides error message when user retried", async () => {
         server.use(
-            http.post('/api/completion', () => {
+            http.post('/api/completion', async () => {
+                await delay(100)
                 return HttpResponse.error()
             }, { once: true })
         );
 
-        renderComponent();
+        const { user } = renderComponent();
         const askButton = screen.getByRole("button", { name: "Ask" });
-        fireEvent.click(askButton);
+        await user.click(askButton);
 
         const errorText = await screen.findByText("Sorry, something went wrong.");
         expect(errorText).toBeInTheDocument();
 
         // User clicks the Ask button again to retry
-        fireEvent.click(askButton);
+        await user.click(askButton);
 
         await waitFor(() => {
             expect(screen.queryByText("Sorry, something went wrong.")).not.toBeInTheDocument();

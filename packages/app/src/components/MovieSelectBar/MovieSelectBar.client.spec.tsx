@@ -1,10 +1,10 @@
-import { fireEvent, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
+import { screen } from "@testing-library/react";
 import { MovieSelectBar, MovieSelectBarProps } from "./MovieSelectBar.client";
 import { renderWithProviders } from "../../utils/renderWithProviders";
 
-const scrollIntoViewMock = jest.fn();
-window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
+global.HTMLElement.prototype.scrollIntoView = jest.fn();
+global.HTMLElement.prototype.releasePointerCapture = jest.fn();
+global.HTMLElement.prototype.hasPointerCapture = jest.fn();
 
 const defaultProps: MovieSelectBarProps = {
     isLoading: false,
@@ -49,29 +49,29 @@ describe("MovieSelectBar", () => {
         expect(stopButton).toBeDisabled();
     });
 
-    it("calls onSubmit when form is submitted", () => {
-        renderComponent();
+    it("calls onSubmit when form is submitted", async () => {
+        const { user } = renderComponent();
 
         const askButton = screen.getByRole("button", { name: "Ask" });
         expect(askButton).toBeInTheDocument();
-        fireEvent.click(askButton);
+        await user.click(askButton);
 
         expect(defaultProps.onSubmit).toHaveBeenCalled();
     });
 
-    it("calls onGenreChange when genre is changed", () => {
+    it("calls onGenreChange when genre is changed", async () => {
         const mockOnGenreChange = jest.fn();
-        renderComponent({
+        const { user } = renderComponent({
             ...defaultProps,
             onGenreChange: mockOnGenreChange,
         });
         const select = screen.getByRole("combobox", { name: "Select genre" });
         expect(select).toBeInTheDocument();
 
-        fireEvent.click(select);
+        await user.click(select);
 
-        const option = screen.getByRole('option', { name: 'Sci-Fi' });
-        fireEvent.click(option);
+        const option = await screen.findByRole('option', { name: 'Sci-Fi' });
+        await user.click(option);
 
         expect(mockOnGenreChange).toHaveBeenCalledWith("Sci-Fi");
     });
@@ -86,9 +86,9 @@ describe("MovieSelectBar", () => {
         expect(askButton).toBeDisabled();
     });
 
-    it("calls onStop when Stop is clicked", () => {
+    it("calls onStop when Stop is clicked", async () => {
         const mockStop = jest.fn();
-        renderComponent({
+        const { user } = renderComponent({
             ...defaultProps,
             isLoading: true,
             onStop: mockStop,
@@ -100,7 +100,7 @@ describe("MovieSelectBar", () => {
         const stopButton = screen.getByRole("button", { name: "Stop" });
         expect(stopButton).toBeInTheDocument();
 
-        fireEvent.click(stopButton);
+        await user.click(stopButton);
         expect(mockStop).toHaveBeenCalled();
     });
 });

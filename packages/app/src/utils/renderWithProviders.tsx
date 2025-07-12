@@ -4,6 +4,7 @@ import {
     RenderOptions,
     RenderResult,
 } from '@testing-library/react';
+import { UserEvent, userEvent } from '@testing-library/user-event';
 import { Theme } from '@radix-ui/themes';
 
 const AllProviders = ({ children }: { children: React.ReactNode }) => {
@@ -17,8 +18,12 @@ const AllProviders = ({ children }: { children: React.ReactNode }) => {
 const renderWithProviders = (
     ui: ReactElement,
     options?: Omit<RenderOptions, 'wrapper'>
-): RenderResult => {
-    return render(ui, { wrapper: AllProviders, ...options });
+): RenderResult & { user: UserEvent } => {
+    const user = userEvent.setup();
+    return {
+        user,
+        ...render(ui, { wrapper: AllProviders, ...options })
+    };
 };
 
 export { renderWithProviders };
