@@ -7,6 +7,10 @@ This repository is a sample project demonstrating how to write tests using the V
 - **AI-Powered Movie Finder**: Choose a genre and movie length, and let the AI recommend what to watch.
 - **Testing with Vercel AI SDK**: Learn how to write tests for components and functionality powered by AI.
 
+## Demo
+
+![A mini demo for the movie picker app](movie-finder.gif)
+
 ## Getting Started
 
 To use this example, clone the repository and install dependencies:
