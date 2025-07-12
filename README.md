@@ -12,8 +12,8 @@ This repository is a sample project demonstrating how to write tests using the V
 To use this example, clone the repository and install dependencies:
 
 ```sh
-git clone git@github.com:snowleo208/ai-movie-selector.git
-cd ai-movie-selector
+git clone git@github.com:snowleo208/ai-movie-finder.git
+cd ai-movie-finder
 pnpm install
 ```
 
@@ -49,5 +49,5 @@ Learn more about the tools and technologies used in this project:
 
 - [Vercel AI SDK](https://vercel.com/docs/ai)
 - [Turborepo](https://turbo.build/repo/docs)
-- [React](https://reactjs.org/)
+- [Next.js](https://nextjs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
